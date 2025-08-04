@@ -107,23 +107,25 @@ pipeline {
     }
 
     post {
-        always {
-            // Archive reports
-            archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
-
-            // Publish HTML report in Jenkins UI
-            publishHTML(target: [
-                name: 'Trivy Security Report',
-                reportDir: 'reports',
-                reportFiles: 'report.html',
-                keepAll: true
-            ])
-        }
-        success {
-            echo 'Pipeline succeeded! Images scanned, deployed, and pushed to Docker Hub.'
-        }
-        failure {
-            echo 'Pipeline failed! Check logs and Trivy report.'
+    always {
+        archiveArtifacts artifacts: 'reports/**', allowEmptyArchive: true
+        script {
+            if (fileExists('reports/report.html')) {
+                publishHTML([
+                    reportDir: 'reports',
+                    reportFiles: 'report.html',
+                    keepAll: true
+                ])
+            } else {
+                echo '⚠️ report.html not generated. Skipping HTML report publish.'
+            }
         }
     }
+    success {
+        echo 'Pipeline succeeded! App deployed and images pushed.'
+    }
+    failure {
+        echo 'Pipeline failed! Check logs and Trivy report.'
+    }
+}
 }
