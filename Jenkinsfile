@@ -88,17 +88,17 @@ pipeline {
             steps {
                 script {
                     // Login to Docker Hub
-                    withCredentials([usernamePassword(usernameVariable: 'koukaa', passwordVariable: 'nabil1234')]) {
+                    withCredentials([usernamePassword(credentialsId: 'docker',usernameVariable: 'koukaa', passwordVariable: 'nabil1234')]) {
                     bat 'echo $DOCKER_PASSWORD | docker login -u koukaa -p nabil1234'
                 }
 
                     // Tag and push frontend
-                    bat "docker tag frontend ${FRONTEND_IMAGE}:${IMAGE_TAG}"
-                    bat "docker push ${FRONTEND_IMAGE}:${IMAGE_TAG}"
+                    bat "docker tag market-place-frontend ${env.FRONTEND_IMAGE}:${env.IMAGE_TAG}"
+                    bat "docker push ${env.FRONTEND_IMAGE}:${env.IMAGE_TAG}"
 
                     // Tag and push backend
-                    bat "docker tag backend ${BACKEND_IMAGE}:${IMAGE_TAG}"
-                    bat "docker push ${BACKEND_IMAGE}:${IMAGE_TAG}"
+                    bat "docker tag market-place-backend ${env.BACKEND_IMAGE}:${env.IMAGE_TAG}"
+                    bat "docker push ${env.BACKEND_IMAGE}:${env.IMAGE_TAG}"
 
                     echo '✅ Images pushed to Docker Hub!'
                 }
