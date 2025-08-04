@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Commencez votre développement avec un système de conception pour Bootstrap 4.">
+  <meta name="author" content="Creative Tim">
+
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+  <app-navbar></app-navbar>
+  <main>
+    <section class="section section-shaped section-lg my-0">
+      <div class="shape shape-style-1 bg-gradient-default">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="container pt-lg-md">
+        <div class="row justify-content-center">
+          <div class="col-lg-5">
+            <div class="card bg-secondary shadow border-0">
+              <div class="card-header bg-white pb-2">
+                <div class="text-muted text-center mb-3">
+                  <small>Connectez-vous avec</small>
+                </div>
+                <div class="btn-wrapper text-center">
+
+                  <a (click)="oauth2Login('google')" class="btn btn-neutral btn-icon">
+                    <span class="btn-inner--icon">
+                      <img src="../../assets/img/icons/common/google.svg">
+                    </span>
+                    <span class="btn-inner--text">Google</span>
+                  </a>
+                </div>
+              </div>
+              <div class="card-body px-lg-5 py-lg-5">
+                <div class="text-center text-muted mb-4">
+                  <small>Ou connectez-vous avec vos identifiants</small>
+                </div>
+                <form role="form" (ngSubmit)="login()">
+                  <div class="form-group mb-3">
+                    <div class="input-group input-group-alternative" [ngClass]="{'is-invalid': emailField.touched && !loginRequest.email}">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+                      </div>
+                      <input class="form-control" placeholder="Email" type="email" [(ngModel)]="loginRequest.email"
+                        #emailField="ngModel" id="email" name="email" required>
+                    </div>
+                  </div>
+                  <div class="input-group input-group-alternative" [ngClass]="{'is-invalid': passwordField.touched && !loginRequest.password}">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                    </div>
+                    <input class="form-control" placeholder="Mot de passe" type="password" [(ngModel)]="loginRequest.password"
+                      #passwordField="ngModel" id="password" name="password" required>
+                  </div>
+           
+                  <div class="custom-control custom-control-alternative custom-checkbox">
+                    <input class="custom-control-input" id=" customCheckLogin" type="checkbox">
+                    <label class="custom-control-label" for=" customCheckLogin">
+                      <span>Souviens-toi de moi</span>
+                    </label>
+                  </div>
+                  <div class="text-center">
+                    <button type="submit" class="btn btn-primary my-4">Se connecter</button>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-6">
+                <a href="#" class="text-light">
+                  <small>Mot de passe oublié ?</small>
+                </a>
+              </div>
+              <div class="col-6 text-right">
+                <a href="/signup" class="text-light">
+                  <small>Créer un nouveau compte</small>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <app-footer></app-footer>
+  <script src="../../assets/vendor/jquery/jquery.min.js"></script>
+  <script src="../../assets/vendor/popper/popper.min.js"></script>
+  <script src="../../assets/vendor/bootstrap/bootstrap.min.js"></script>
+  <script src="../../assets/vendor/headroom/headroom.min.js"></script>
+
+  <script src="../../assets/js/argon.js?v=1.0.0"></script>
+</body>
+
+</html>

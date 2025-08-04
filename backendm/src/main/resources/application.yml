@@ -1,0 +1,81 @@
+spring:
+  thymeleaf:
+    enabled: true
+    check-template-location: true
+    prefix: classpath:/template/
+    suffix: .html
+    mode: HTML5
+    encoding: UTF-8
+    cache: false
+  datasource:
+    url: jdbc:mysql://mysql:3306/ecommerce
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: false
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 313648681922-qvpainl6d4tn08gr9mbstc93vv3rnlml.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - profile
+              - email
+            redirect-uri: http://localhost:8080/login/oauth2/code/google
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            user-name-attribute: sub
+  server:
+    port: 8080
+
+  logging:
+    level:
+      root: INFO
+      org:
+        springframework:
+          web: DEBUG
+          security: DEBUG
+          org.springframework.mail: DEBUG
+
+  web:
+    resources:
+      static-locations: classpath:/static/assets/
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+#spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: akr3m.homrani@gmail.com
+    password: bhum bifh aypt znae
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            connectiontimeout: 5000
+            timeout: 5000
+            writetimeout: 5000
+
+
+
+image:
+  upload:
+    dir: C:\Users\koukaa\Desktop\market-place\marketplaceproject\marketplaceproject\src\assets

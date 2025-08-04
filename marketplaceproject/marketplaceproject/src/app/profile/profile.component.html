@@ -1,0 +1,97 @@
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/3.6.95/css/materialdesignicons.css"
+    rel="stylesheet">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<div *ngIf="isProfilePage">
+  <app-navbar></app-navbar>
+  <app-header></app-header>
+</div>
+<body className="snippet-body">
+  <div class="page-content" id="page-content" style="justify-content: center;">
+    <div class="padding">
+      <div class="container-fluid">
+        <div class="row d-flex justify-content-center">
+          <!-- Left Card: Profile -->
+          <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            <div class="card">
+              <div class="card-body text-center bg-c-lite-green text-white">
+                <div class="m-b-25">
+                  <img *ngIf="user?.image" [src]="'/assets/' + user?.image" alt="Profile Image" class="profile-picture-real" />
+                  <div class="re">
+                    <label for="fileInput" class="update-profile-btn">
+                      <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d433ab8ace1052e9cb5f6f540f9edc854b03f575a6b53836cd5728f65fc0e75c?placeholderIfAbsent=true&apiKey=8cc42f2afc7940e4965d155da4037d4d"
+                        alt="" class="update-icon">
+                      Update Image
+                    </label>
+                    <input type="file" id="fileInput" class="file-input" (change)="onFileSelected($event)" hidden>
+                  </div>
+                </div>
+                <h6 class="f-w-600" *ngIf="user?.role === 'SOCIETE'">{{ user?.name }}</h6>
+                <h6 class="f-w-600">{{ user?.username }}</h6>
+                <p>{{ user?.role || 'User Role' }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Card: Information -->
+          <div class="col-lg-8 col-md-6 col-sm-12">
+            <div class="card">
+              <div class="card-body">
+                <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Information</h6>
+                <form *ngIf="user" (ngSubmit)="updateUserDetails()">
+
+                  <div class="row">
+                    <!-- Name/Username -->
+                    <div class="col-12 mb-3" *ngIf="user?.role === 'SOCIETE'">
+                      <p class="m-b-10 f-w-600">Nom de la societe</p>
+                      <input type="text" class="form-control text-muted f-w-400" [value]="user.name"  />
+                    </div>
+                    <div class="col-12 mb-3" *ngIf="user?.role !== 'SOCIETE'">
+                      <p class="m-b-10 f-w-600">Username</p>
+                      <input type="text" class="form-control text-muted f-w-400" [value]="user.username"  />
+                    </div>
+                    <!-- Email -->
+                    <div class="col-12 mb-3">
+                      <p class="m-b-10 f-w-600">Email</p>
+                      <input type="email" class="form-control" [(ngModel)]="user.email" name="email" required class="form-control text-muted f-w-400"/>
+                    </div>
+                    <!-- Phone -->
+                    <div class="col-12 mb-3">
+                      <p class="m-b-10 f-w-600">Telephone</p>
+                      <input type="text" class="form-control" [(ngModel)]="user.phone" name="phone" class="form-control text-muted f-w-400"/>
+                    </div>
+                    <!-- Address -->
+                    <div class="col-12 mb-3">
+                      <p class="m-b-10 f-w-600">Address</p>
+                      <input type="text" class="form-control" [(ngModel)]="user.address" name="address" class="form-control text-muted f-w-400"/>
+                    </div>
+                    <!-- City and Postal Code for 'SOCIETE' role -->
+                    <div *ngIf="user?.role === 'SOCIETE'" class="col-12">
+                      <div class="mb-3">
+                        <p class="m-b-10 f-w-600">City</p>
+                        <input type="text" class="form-control" [(ngModel)]="user.city" name="city" class="form-control text-muted f-w-400"/>
+                      </div>
+                      <div class="mb-3">
+                        <p class="m-b-10 f-w-600">Postal Code</p>
+                        <input type="text" class="form-control" [(ngModel)]="user.postalCode" name="postalCode" class="form-control text-muted f-w-400"/>
+                      </div>
+                    </div>
+                    <div class="col-md-6 d-flex flex-wrap justify-content-md-start">
+                       <button type="submit" class="create-button">Save Changes</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-footer *ngIf="isProfilePage"></app-footer>
+  <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+</body>

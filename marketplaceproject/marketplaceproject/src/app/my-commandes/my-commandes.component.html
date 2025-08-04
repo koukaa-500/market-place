@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="fr" data-bs-theme="light">
+
+<body>
+    <app-navbar></app-navbar>
+    <div class="wrapper dashboard-wrapper">
+        <div class="d-flex flex-wrap flex-xl-nowrap">
+            <div class="page-content">
+                <main id="content" class="bg-body-tertiary-01 d-flex flex-column main-content">
+                    <div class="dashboard-page-content">
+                        <div class="row">
+                            <div class="col-lg-9">
+                                <div class="card mb-4 rounded-4 p-7">
+                                    <div class="card-body px-0 pt-7 pb-0">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover align-middle table-nowrap mb-0 table-borderless">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th class="align-middle" scope="col">#ID</th>
+                                                        <th class="align-middle" scope="col">Noms des Produits</th>
+                                                        <th class="align-middle" scope="col">Prix</th>
+                                                        <th class="align-middle" scope="col">Statut</th>
+                                                        <th class="align-middle" scope="col">Date</th>
+                                                        <th class="align-middle text-center" scope="col">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let order of ordersToDisplay">
+                                                      <td><a href="#">#{{ order.id }}</a></td>
+                                                      <td class="text-body-emphasis">
+                                                        <span *ngFor="let product of order.products">
+                                                          {{ product.name }}<span *ngIf="product !== order.products[order.products.length - 1]">, </span>
+                                                        </span>
+                                                      </td>
+                                                      <td>{{ order.totalPrice | currency : ' TND' }}</td>
+                                                      <td>
+                                                        <span class="badge rounded-lg rounded-pill alert py-3 px-4 mb-0 alert-{{ order.status ? 'success' : 'warning' }} border-0 text-capitalize fs-12">
+                                                          {{ order.status ? 'Complété' : 'En cours' }}
+                                                        </span>
+                                                      </td>
+                                                      <td>{{ order.orderDate | date }}</td>
+                                                      <td class="text-center">
+                                                        <div class="d-flex flex-nowrap justify-content-center">
+                                                          <a class="btn btn-primary py-4 fs-13px btn-xs me-4">Détails</a>
+                                                          <div class="dropdown no-caret">
+                                                            <a href="#" data-bs-toggle="dropdown" class="dropdown-toggle btn btn-outline-primary btn-xs hover-white py-4 px-5">
+                                                              <i class="fa-solid fa-ellipsis-h"></i>
+                                                            </a>
+                                                            <div class="dropdown-menu dropdown-menu-end m-0">
+                                                              <a class="dropdown-item">Voir les détails</a>
+                                                              <a class="dropdown-item">Modifier les informations</a>
+                                                              <a class="dropdown-item text-danger"  *ngIf="!order.status" (click)="deleteOrder(order.id)">Supprimer</a>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                      </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <div class="pagination-container">
+                                                <button (click)="prevPage()" [disabled]="currentPage === 1">Précédent</button>
+                                                <span>Page {{ currentPage }} sur {{ totalPages }}</span>
+                                                <button (click)="nextPage()" [disabled]="currentPage === totalPages">Suivant</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../../cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="../../../cdn.jsdelivr.net/npm/select2%404.0.13/dist/js/select2.full.min.js"></script>
+    <script src="../assets/vendors/chartjs/chart.min.js"></script>
+    <script src="../assets/vendors/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="../assets/vendors/clipboard/clipboard.min.js"></script>
+    <script src="../assets/vendors/vanilla-lazyload/lazyload.min.js"></script>
+    <script src="../assets/vendors/waypoints/jquery.waypoints.min.js"></script>
+    <script src="../assets/vendors/lightgallery/lightgallery.min.js"></script>
+    <script src="../assets/vendors/lightgallery/plugins/zoom/lg-zoom.min.js"></script>
+    <script src="../assets/vendors/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script>
+    <script src="../assets/vendors/lightgallery/plugins/video/lg-video.min.js"></script>
+    <script src="../assets/vendors/lightgallery/plugins/vimeoThumbnail/lg-vimeo-thumbnail.min.js"></script>
+    <script src="../assets/vendors/isotope/isotope.pkgd.min.js"></script>
+    <script src="../assets/vendors/slick/slick.min.js"></script>
+    <script src="../assets/vendors/gsap/gsap.min.js"></script>
+    <script src="../assets/vendors/gsap/ScrollToPlugin.min.js"></script>
+    <script src="../assets/vendors/gsap/ScrollTrigger.min.js"></script>
+    <script src="../assets/vendors/mapbox-gl/mapbox-gl.js"></script>
+    <script src="../assets/js/dashboard.min.js"></script>
+
+    <app-footer></app-footer>
+</body>
+
+</html>

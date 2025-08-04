@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails de l'Employé</title>
+</head>
+
+<body>
+
+    <div class="card mb-4 rounded-4 p-7">
+        
+        <div class="row mb-9 align-items-center justify-content-between">
+	
+            <div class="col-md-6 mb-8 mb-md-0">
+                <h2 class="fs-4 mb-0">Liste des Employés</h2>
+                <p>Gérez et consultez les informations des employés.</p>
+            </div>
+            
+            <div class="col-md-6 d-flex flex-wrap justify-content-md-end">
+                <a routerLink="/dashboard/create-Emp" class="create-button">
+                    Create new
+                </a>
+                
+            </div>
+        </div>
+        
+        <div class="card-header bg-transparent px-0 pt-0 pb-7">
+            <div class="row align-items-center justify-content-between">
+                <!-- Titre de la carte -->
+            </div>
+        </div>
+        <div class="card-body px-0 pt-7 pb-0">
+            <div class="card-header bg-transparent px-0 pt-0 pb-7">
+                <div class="row align-items-center justify-content-between">
+                    <div class="row mb-4">
+                        <!-- Search Box for Username or Email -->
+                        <div class="col-md-4">
+                          <input 
+                            type="text" 
+                            class="form-control" 
+                            placeholder="Rechercher par nom d'utilisateur ou email" 
+                            [(ngModel)]="searchText" 
+                            (input)="applyFilters()" />
+                        </div>
+                      
+                        <!-- Select for Role -->
+                        <div class="col-md-2">
+                          <select class="form-select" [(ngModel)]="selectedRole" (change)="applyFilters()">
+                            <option value="">Tous les rôles</option>
+                            <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+                          </select>
+                        </div>
+                      
+                        <!-- Select for Status -->
+                        <div class="col-md-2">
+                          <select class="form-select" [(ngModel)]="selectedStatus" (change)="applyFilters()">
+                            <option value="">Tous les statuts</option>
+                            <option value="true">Actif</option>
+                            <option value="false">Inactif</option>
+                          </select>
+                        </div>
+                      
+                        <!-- Date Picker for Registration Date -->
+                        <div class="col-md-3">
+                          <input 
+                            type="date" 
+                            class="form-control" 
+                            [(ngModel)]="selectedDate" 
+                            (change)="applyFilters()" />
+                        </div>
+                      </div>
+                      
+        
+        </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle table-nowrap mb-0" *ngIf="employees.length > 0; else noEmployees">
+                  <tbody>
+                    <tr *ngFor="let employee of employees">
+                      <td class="text-center">
+                        <div class="form-check">
+                          <input class="form-check-input rounded-0 ms-0" type="checkbox" />
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex align-items-center flex-nowrap">
+                          <img *ngIf="employee.image" [src]="'/assets/' + employee.image" alt="Image" width="50" height="50" />
+                          <p class="ms-6 fw-semibold text-body-emphasis mb-0">{{ employee.username }}</p>
+                        </div>
+                      </td>
+                      <td>{{ employee.role }}</td>
+                      <td>{{ employee.email }}</td>
+                      <td>{{ employee.address }}</td>
+                      <td>
+                        <span class="badge rounded-lg rounded-pill alert py-3 px-4 mb-0 border-0"
+                          [ngClass]="employee.active ? 'alert-success' : 'alert-danger'">
+                          {{ employee.active ? 'Actif' : 'Inactif' }}
+                        </span>
+                      </td>
+                      <td class="text-center">
+                        <div class="d-flex flex-nowrap justify-content-center">
+                          <a class="btn btn-primary py-4 px-5 btn-xs fs-13px me-4" (click)="openUpdatePopup(employee)">Modifier</a>
+                          <a class="btn btn-outline-primary btn-hover-bg-danger py-4 px-5 fs-13px btn-xs me-4" (click)="deleteEmployee(employee.id)">Supprimer</a>
+                        </div>
+                      </td>
+                      
+                    </tr>
+                  </tbody>
+                </table>
+                <ng-template #noEmployees>
+                  <p>Aucun employé trouvé pour les critères sélectionnés.</p>
+                </ng-template>
+              </div>
+              
+        </div>
+    </div>
+
+    <!-- Modal Afficher les Détails -->
+    <div class="modal" *ngIf="isPopupOpen">
+        <div class="modal-content">
+            <span class="close" (click)="closePopup()">&times;</span>
+            <h2 class="form-subtitle">Details de l'Employe</h2>
+            <div *ngIf="selectedEmployee">
+                <div class="re">
+                    <input type="file" id="fileInput" class="imageUser" (change)="onFileSelected($event)" hidden>
+                    <img *ngIf="selectedEmployee.image" [src]="'/assets/' + selectedEmployee.image" alt="Photo de Profil" class="profile-picture-real">
+                </div>
+                <!-- Nom d'utilisateur -->
+                <p class="form-input"><strong>Nom d'utilisateur :</strong> {{ selectedEmployee.username }}</p>
+      
+                <!-- Email -->
+                <p class="form-input"><strong>Email :</strong> {{ selectedEmployee.email }}</p>
+                <div class="form-row">
+                <!-- Téléphone -->
+                <p class="form-input"><strong>Téléphone :</strong> {{ selectedEmployee.phone }}</p>
+      
+                <!-- Adresse -->
+                <p class="form-input"><strong>Adresse :</strong> {{ selectedEmployee.address }}</p>
+      </div>
+                <!-- Rôle -->
+                <p class="form-input"><strong>Rôle :</strong> {{ selectedEmployee.role }}</p>
+      
+                <!-- Statut -->
+                <p class="form-input"><strong>Statut :</strong> {{ selectedEmployee.active ? 'Actif' : 'Inactif' }}</p>
+            </div>
+      
+            <div class="button-group">
+                <button class="btn btn-secondary" (click)="closePopup()">Fermer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Modifier les Détails -->
+    <div class="modal" *ngIf="isUpdatePopupOpen">
+        <div class="modal-content">
+            <span class="close" (click)="closePopup()">&times;</span>
+            <h2 class="form-subtitle">Modifier l'Employe</h2>
+            <form (ngSubmit)="updateEmployeeDetails()" *ngIf="selectedEmployee" #employeeForm="ngForm">
+                <div class="form-group">
+                    <div class="re">
+                        <label for="fileInput" class="update-profile-btn">
+                            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d433ab8ace1052e9cb5f6f540f9edc854b03f575a6b53836cd5728f65fc0e75c?placeholderIfAbsent=true&apiKey=8cc42f2afc7940e4965d155da4037d4d"
+                                alt="" class="update-icon">
+                            Mettre à jour l'image
+                        </label>
+                        <input type="file" id="fileInput" class="file-input" (change)="onFileSelected($event)" hidden>
+                        <img *ngIf="selectedEmployee.image" [src]="'/assets/' + selectedEmployee.image" alt="Photo de Profil" class="profile-picture-real">
+                    </div>
+    
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="username">Nom d'utilisateur :</label>
+                            <input id="username" [(ngModel)]="selectedEmployee.username" name="username" required #username="ngModel" class="form-input" />
+                            <div *ngIf="username.invalid && username.touched" class="error-message">Le nom d'utilisateur est requis</div>
+                        </div>
+                        <div class="form-field">
+                            <label for="email">Email :</label>
+                            <input id="email" [(ngModel)]="selectedEmployee.email" name="email" required email #email="ngModel" class="form-input" />
+                            <div *ngIf="email.invalid && email.touched" class="error-message">Veuillez entrer un email valide</div>
+                        </div>
+                    </div>
+    
+                    <div>
+                        <label for="phone">Téléphone :</label>
+                        <input id="phone" [(ngModel)]="selectedEmployee.phone" name="phone" required pattern="^\d{8}$" #phone="ngModel" class="form-input" />
+                        <div *ngIf="phone.invalid && phone.touched" class="error-message">Le téléphone doit être un numéro à 10 chiffres</div>
+                    </div>
+                    <div>
+                        <label for="address">Adresse :</label>
+                        <input id="address" [(ngModel)]="selectedEmployee.address" name="address" required #address="ngModel" class="form-input" />
+                        <div *ngIf="address.invalid && address.touched" class="error-message">L'adresse est requise</div>
+                    </div>
+
+
+                    <div class="form-row">
+                        <div>
+                            <label for="role">Rôle :</label>
+                            <select id="role" [(ngModel)]="selectedEmployee.role" name="role" required #role="ngModel" class="form-input1">
+                                <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+                            </select>
+                            <div *ngIf="role.invalid && role.touched" class="error-message">Le rôle est requis</div>
+                        </div>
+                    <div>
+                        <label for="active">Statut :</label>
+                        <select id="active" [(ngModel)]="selectedEmployee.active" name="active" required #active="ngModel" class="form-input1">
+                            <option [value]="true">Actif</option>
+                            <option [value]="false">Inactif</option>
+                        </select>
+                        <div *ngIf="active.invalid && active.touched" class="error-message">Le statut est requis</div>
+                    </div>
+              
+    </div>
+                    <div class="buttonleft">
+                        <button type="button" class="btn btn-secondary" (click)="isPopupOpen = false" (click)="closePopup()">Annuler</button>
+                        <button type="submit" class="btn btn-primary" [disabled]="employeeForm.invalid">Enregistrer les Modifications</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+
+</body>
+
+</html>

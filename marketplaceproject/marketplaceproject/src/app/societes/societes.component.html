@@ -1,0 +1,285 @@
+<!--
+-->
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css" rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+</head>
+
+<body>
+  <div class="modal fade" id="createSocieteModal" tabindex="-1" role="dialog" aria-labelledby="createSocieteModalLabel" aria-hidden="true" [ngClass]="{'show d-block': isCreateModalOpen}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="createSocieteModalLabel">Create Societe</h4>
+          <button type="button" class="close" aria-label="Close" (click)="closeCreateModal()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="createSocieteForm" (ngSubmit)="onCreateSocieteSubmit()">
+            <div class="form-group">
+              <label for="societeName">Name:</label>
+              <input id="societeName" class="form-control" formControlName="societeName" />
+              <small *ngIf="createSocieteForm.get('societeName')?.invalid && createSocieteForm.get('societeName')?.touched" class="text-danger">
+                Name is required.
+              </small>
+            </div>
+  
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input id="email" class="form-control" formControlName="email" />
+              <small *ngIf="createSocieteForm.get('email')?.invalid && createSocieteForm.get('email')?.touched" class="text-danger">
+                Valid email is required.
+              </small>
+            </div>
+  
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <input id="password" type="password" class="form-control" formControlName="password" />
+              <small *ngIf="createSocieteForm.get('password')?.invalid && createSocieteForm.get('password')?.touched" class="text-danger">
+                Password must be at least 6 characters long.
+              </small>
+            </div>
+  
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="phone">Phone:</label>
+                  <input id="phone" class="form-control" formControlName="phone" />
+                  <small *ngIf="createSocieteForm.get('phone')?.invalid && createSocieteForm.get('phone')?.touched" class="text-danger">
+                    Phone number is required.
+                  </small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="address">Address:</label>
+                  <input id="address" class="form-control" formControlName="address" />
+                  <small *ngIf="createSocieteForm.get('address')?.invalid && createSocieteForm.get('address')?.touched" class="text-danger">
+                    Address is required.
+                  </small>
+                </div>
+              </div>
+            </div>
+  
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="city">City:</label>
+                  <input id="city" class="form-control" formControlName="city" />
+                  <small *ngIf="createSocieteForm.get('city')?.invalid && createSocieteForm.get('city')?.touched" class="text-danger">
+                    City is required.
+                  </small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="postalCode">Postal Code:</label>
+                  <input id="postalCode" class="form-control" formControlName="postalCode" />
+                  <small *ngIf="createSocieteForm.get('postalCode')?.invalid && createSocieteForm.get('postalCode')?.touched" class="text-danger">
+                    Postal code is required.
+                  </small>
+                </div>
+              </div>
+            </div>
+  
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" (click)="closeCreateModal()">Close</button>
+              <button type="submit" class="btn btn-primary" [disabled]="createSocieteForm.invalid">Create</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <section class="ftco-section">
+    <button type="button" class="btn btn-primary mb-4" (click)="openCreateModal()">Create Societe</button>
+
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-6 text-center mb-4">
+          <h6 class="heading-section">Liste des societes</h6>
+         
+
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+
+          <div class="table-wrap">
+            <table class="table myaccordion table-hover" id="accordion">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Address</th>
+                  <th>Phone</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                  <th>&nbsp;</th>
+                </tr>
+              </thead>
+              <tbody *ngFor="let societe of societes; let i = index">
+                <!-- Main Row for each Societe -->
+                <tr [class.collapsed]="expandedIndex !== i" [attr.aria-expanded]="expandedIndex === i">
+                  <td>{{ societe.id }}</td>
+                  <td>{{ societe.email }}</td>
+                  <td>{{ societe.address }}</td>
+                  <td>{{ societe.phone }}</td>
+          <td>
+            <span
+            class="badge rounded-lg rounded-pill alert py-3 px-4 mb-0"
+            [ngClass]="societe.active ? 'alert-success' : 'alert-warning'"
+            (click)="toggleUserActiveStatus(societe.id, !societe.active)"
+            style="cursor: pointer;"
+            title="Click to change status">
+            {{ societe.active ? 'Active' : 'Inactive' }}
+          </span>
+          </td>
+                  <td>
+                    <i class="fa-solid fa-eye" aria-hidden="false"></i>
+                    <i class="fa-solid fa-pen-to-square edit-icon" (click)="openEditModal(societe)"></i>
+                    <i class="fa-solid fa-trash delete-icon" (click)="deleteUser(societe.id)"></i>
+                  </td>
+                  <td>
+                    <i 
+                      class="fa" 
+                      [ngClass]="expandedIndex === i ? 'fa-arrow-up' : 'fa-arrow-down'" 
+                      aria-hidden="true" 
+                      (click)="toggleEmployeesList(i)">
+                    </i>
+                  </td>
+                </tr>
+              
+                <!-- Collapsible Row for Employees -->
+                <tr *ngIf="expandedIndex === i">
+                  <td colspan="5">
+                    <div [id]="'collapse' + i" class="collapse acc show">
+                      <ul>
+                        <li *ngFor="let employee of societe.employees">
+                          {{ employee.username }} | {{ employee.email }} | ({{ employee.role }})
+                        </li>
+                        <li *ngIf="!societe.employees?.length">No employees found.</li>
+                      </ul>
+                    </div>
+                  </td>
+                  <th>&nbsp;</th>
+                </tr>
+              </tbody>
+            </table>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Basic Modal -->
+  <div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true" [ngClass]="{'show d-block': isEditModalOpen}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel">Edit User</h4>
+          <button type="button" class="close" aria-label="Close" (click)="closeEditModal()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Reactive Form -->
+          <form [formGroup]="editUserForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+              <label for="societeName">Name:</label>
+              <input id="societeName" class="form-control" formControlName="societeName" />
+              <small *ngIf="editUserForm.get('societeName')?.invalid && editUserForm.get('societeName')?.touched" class="text-danger">
+                Name is required.
+              </small>
+            </div>
+  
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input id="email" class="form-control" formControlName="email" />
+              <small *ngIf="editUserForm.get('email')?.invalid && editUserForm.get('email')?.touched" class="text-danger">
+                Valid email is required.
+              </small>
+            </div>
+  
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <input id="password" type="password" class="form-control" formControlName="password" />
+              <small *ngIf="editUserForm.get('password')?.invalid && editUserForm.get('password')?.touched" class="text-danger">
+                Password must be at least 6 characters long.
+              </small>
+            </div>
+  
+             <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="phone">Phone:</label>
+                <input id="phone" class="form-control" formControlName="phone" />
+                <small *ngIf="editUserForm.get('phone')?.invalid && editUserForm.get('phone')?.touched" class="text-danger">
+                  Phone number is required.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="address">Address:</label>
+                <input id="address" class="form-control" formControlName="address" />
+                <small *ngIf="editUserForm.get('address')?.invalid && editUserForm.get('address')?.touched" class="text-danger">
+                  Address is required.
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="city">City:</label>
+                <input id="city" class="form-control" formControlName="city" />
+                <small *ngIf="editUserForm.get('city')?.invalid && editUserForm.get('city')?.touched" class="text-danger">
+                  City is required.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="postalCode">Postal Code:</label>
+                <input id="postalCode" class="form-control" formControlName="postalCode" />
+                <small *ngIf="editUserForm.get('postalCode')?.invalid && editUserForm.get('postalCode')?.touched" class="text-danger">
+                  Postal code is required.
+                </small>
+              </div>
+            </div>
+          </div>
+       
+  
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" (click)="closeEditModal()">Close</button>
+              <button type="submit" class="btn btn-primary" [disabled]="editUserForm.invalid">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+  <script src="src/assets/js/jquery.min.js"></script>
+  <script src="src/assets/js/popper.js"></script>
+  <script src="src/assets/js/bootstrap.min.js"></script>
+  <script src="src/assets/js/main.js"></script>
+
+</body>
+
+</html>

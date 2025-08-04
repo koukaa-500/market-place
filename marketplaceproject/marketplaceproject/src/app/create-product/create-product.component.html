@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body >
+  <app-navbar></app-navbar>
+  
+  <form (ngSubmit)="onSubmit()" #productForm="ngForm" class="form-container">
+    <!-- Nom -->
+    <div class="form-group">
+      <label for="name">Nom de la produit</label>
+      <input
+        type="text"
+        id="name"
+        required
+        class="form-control"
+        [(ngModel)]="product.name"
+        name="name"
+        [readonly]="!hasCreatePermission"
+        #name="ngModel"
+      />
+      <div *ngIf="name.invalid && !name.pristine" class="text-danger">
+        Le nom est obligatoire.
+      </div>
+    </div>
+  
+    <!-- Description -->
+    <div class="form-group">
+      <label for="description">Description</label>
+      <input
+        type="text"
+        id="description"
+        [readonly]="!hasCreatePermission"
+        required
+        class="form-control"
+        [(ngModel)]="product.description"
+        name="description"
+        #description="ngModel"
+      />
+      <div *ngIf="description.invalid && !description.pristine" class="text-danger">
+        La description est obligatoire.
+      </div>
+    </div>
+  
+ <!-- Prix -->
+<div class="form-group">
+  <label for="price">Prix</label>
+  <input
+    type="number"
+    id="price"
+    required
+    class="form-control"
+    [readonly]="!hasCreatePermission"
+    [(ngModel)]="product.price"
+    name="price"
+    #price="ngModel"
+    [min]="0.01"
+  />
+  <div *ngIf="price.invalid && !price.pristine" class="text-danger">
+    Le prix doit être supérieur à 0.
+  </div>
+</div>
+
+<!-- Quantité -->
+<div class="form-group">
+  <label for="quantity">Quantité</label>
+  <input
+    type="number"
+    id="quantity"
+    required
+    class="form-control"
+    [readonly]="!hasCreatePermission"
+    [(ngModel)]="product.quantity"
+    name="quantity"
+    #quantity="ngModel"
+    [min]="1"
+  />
+  <div *ngIf="quantity.invalid && !quantity.pristine" class="text-danger">
+    La quantité doit être supérieure à 0.
+  </div>
+</div>
+
+<div class="form-group">
+  <label for="typeP">Type de la produit</label>
+  <input
+    type="text"
+    id="typeP"
+    required
+    class="form-control"
+    [readonly]="!hasCreatePermission"
+    [(ngModel)]="product.typeP"
+    name="typeP"
+    #typeP="ngModel"
+
+  />
+  <div *ngIf="typeP.invalid && !typeP.pristine" class="text-danger">
+    La Type de la produit est obligatoire.
+  </div>
+</div>
+
+    <!-- Images -->
+    <div class="form-group">
+      <label for="images">Images</label>
+      <input
+        type="file"
+        id="images"
+        [readonly]="!hasCreatePermission"
+        class="form-control" multiple
+        (change)="onFileChange($event)"
+      />
+      <div class="image-list"     *ngIf="hasCreatePermission">
+        <p *ngFor="let image of images; let i = index">
+          {{ image.name }}
+          <button type="button" class="btn2 btn-danger btn-sm" (click)="removeImage(i)">
+            Supprimer
+          </button>
+        </p>
+      </div>
+    </div>
+    
+  
+    <!-- Attributs -->
+    <div class="form-group">
+      <div *ngFor="let attribute of product.attributes; let i = index" class="attribute-row">
+        <input
+          type="text"
+          placeholder="Clé"
+              [readonly]="!hasCreatePermission"
+          class="form-control"
+          [(ngModel)]="attribute.key"
+          name="attributeKey{{ i }}"
+        />
+        <input
+          type="text"
+          placeholder="Valeur"
+          class="form-control"
+          [readonly]="!hasCreatePermission"
+          [(ngModel)]="attribute.value"
+          name="attributeValue{{ i }}"
+        />
+        <button type="button" class="btn2 btn-danger" (click)="removeAttribute(i)"       *ngIf="hasCreatePermission">Supprimer</button>
+      </div>
+      <button type="button" class="btn2 btn-secondary" (click)="addAttribute()" >Ajouter un attribut</button>
+    </div>
+  
+    <div class="button-container">
+      <button
+        type="submit"
+        *ngIf="hasCreatePermission"
+        class="btn btn-primary"
+        [ngClass]="{ 'btn-disabled': !productForm.valid }"
+
+      >
+        Créer un produit
+      </button>
+      <p *ngIf="!hasCreatePermission" class="warning">
+        Vous n'avez pas la permission de créer des produits.
+      </p>
+      
+    </div>
+      </form>
+  
+  <app-footer></app-footer>
+</body>
+</html>

@@ -1,0 +1,103 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+body {
+  overflow-x: hidden;
+  position: relative;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  line-height: 28px;
+  color: #6a6a6a;
+  font-size: 14px;
+  background-color: #eff2f1;
+}
+
+/* Form Styling */
+form {
+  margin: 100px auto;
+  max-width: 400px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-control {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  font-size: 14px;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #08639c;
+  box-shadow: 0 1px 4px rgba(8, 99, 156, 0.5);
+}
+
+.form-control::placeholder {
+  font-size: 14px;
+}
+
+.btn {
+  font-weight: 600;
+  padding: 12px 30px;
+  border-radius: 30px;
+  color: #ffffff;
+  background: #2f2f2f;
+  border-color: #2f2f2f;
+}
+.btn2 {
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 30px;
+  color: #ffffff;
+  background: #2f2f2f;
+
+}
+
+.button-container {
+  display: flex;
+  justify-content: center; /* Centers the button horizontally */
+  margin-top: 20px; /* Adds some space above the button */
+}
+.btn.btn-primary {
+  background: #08639c;
+  border-color: #08639c;
+}
+/* Footer Section */
+.footer-section {
+  padding: 80px 0;
+  background: #ffffff;
+}
+
+.footer-section a {
+  text-decoration: none;
+  color: #2f2f2f;
+  transition: 0.3s all ease;
+}
+
+.footer-section a:hover {
+  color: rgba(47, 47, 47, 0.5);
+}
+
+.footer-section .custom-social li {
+  margin: 2px;
+  display: inline-block;
+}
+
+.footer-section .custom-social li a {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  display: inline-block;
+  background: #dce5e4;
+  color: #08639c;
+  border-radius: 50%;
+  transition: background 0.3s, color 0.3s;
+}

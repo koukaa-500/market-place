@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<!-- Coding by CodingNepal || www.codingnepalweb.com -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Boxicons CSS -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <title>Side Navigation Bar in HTML CSS JavaScript</title>
+  </head>
+  <body >
+    <!-- navbar -->
+    <nav class="navbar">
+      <div class="logo_item">
+        <i class="bx bx-menu" id="sidebarOpen"></i>
+        <a class="navbar-brand" href="/">Boutique<span>.</span></a>
+      </div>
+
+
+
+      <div class="navbar_content">
+        
+        <img *ngIf="user?.image" [src]="'/assets/' + user?.image" class="profile"/>
+
+      </div>
+    </nav>
+
+    <!-- sidebar -->
+    <nav class="sidebar">
+      <div class="menu_content">
+        <ul class="menu_items">
+          <div class="menu_title menu_dahsboard"></div>
+          <!-- duplicate or remove this li tag if you want to add or remove navlink with submenu -->
+          <!-- start -->
+          <li class="item" >
+            <a class="nav_link submenu_item" routerLink="/">
+              <span class="navlink_icon">
+                <i class="fas fa-home-lg-alt"></i>
+              </span>
+              <span class="navlink" >Home</span>
+            </a>
+            <!-- <ul class="menu_items submenu">
+              <a href="#" class="nav_link sublink">Nav Sub Link</a>
+              <a href="#" class="nav_link sublink">Nav Sub Link</a>
+              <a href="#" class="nav_link sublink">Nav Sub Link</a>
+              <a href="#" class="nav_link sublink">Nav Sub Link</a>
+            </ul> -->
+          </li>
+          <!-- end -->
+
+          <!-- duplicate this li tag if you want to add or remove  navlink with submenu -->
+          <!-- start -->
+          <li class="item" (click)="toggleSubmenu($event)" *ngIf="userRole === 'SOCIETE'">
+            <a class="nav_link submenu_item">
+              <span class="navlink_icon">
+                <i class="fa-solid fa-user"></i>
+              </span>
+              <span class="navlink">Employees</span>
+              <i class="bx bx-chevron-right arrow-left"></i>
+            </a>
+            <ul class="menu_items submenu">
+              <li>
+                <a routerLink="/dashboard/Employee" class="nav_link sublink">Employees</a>
+                <a routerLink="/dashboard/create-Emp" class="nav_link sublink">Create Employee</a>
+              </li>
+            </ul>
+          </li>
+          
+          <!-- end -->
+        </ul>
+
+        <ul class="menu_items">
+          <div class="menu_title menu_editor"></div>
+          <!-- duplicate these li tag if you want to add or remove navlink only -->
+          <!-- Start -->
+          <li class="item"*ngIf="userRole === 'ADMIN'"          >
+            <a  class="nav_link" routerLink="/dashboard/societe">
+              <span class="navlink_icon">
+                <i>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M18 15h-2v2h2m0-6h-2v2h2m2 6h-8v-2h2v-2h-2v-2h2v-2h-2V9h8M10 7H8V5h2m0 6H8V9h2m0 6H8v-2h2m0 6H8v-2h2M6 7H4V5h2m0 6H4V9h2m0 6H4v-2h2m0 6H4v-2h2m6-10V3H2v18h20V7z" />
+                  </svg>
+                </i>
+              </span>
+              <span class="navlink">Societe</span>
+            </a>
+          </li>
+          <!-- End -->
+
+          <li class="item" *ngIf="userRole === 'SOCIETE'|| userRole === 'ORDER_MANAGER'">
+            <a routerLink="/dashboard/commandes" class="nav_link">
+              <span class="navlink_icon">
+                <i class="fas fa-shopping-cart"></i>
+              </span>
+              <span class="navlink">Commandes</span>
+            </a>
+          </li>
+          <li class="item" *ngIf="userRole === 'SOCIETE'|| userRole === 'PRODUCT_MANAGER'">
+            <a routerLink="/dashboard/porduits" class="nav_link">
+              <span class="navlink_icon">
+                <i class="fas fa-shopping-bag"></i>
+              </span>
+              <span class="navlink">Produits</span>
+            </a>
+          </li>
+          <li class="item" *ngIf="userRole === 'ADMIN'">
+            <a routerLink="/dashboard/categories" class="nav_link">
+              <span class="navlink_icon">
+                <i class="fas fa-shopping-bag"></i>
+              </span>
+              <span class="navlink">Categories</span>
+            </a>
+          </li>
+          <li class="item">
+            <a routerLink="/dashboard/profile" class="nav_link">
+              <span class="navlink_icon">
+                <i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                      <g fill="currentColor" fill-rule="evenodd" clip-rule="evenodd">
+                        <path d="M16 9a4 4 0 1 1-8 0a4 4 0 0 1 8 0m-2 0a2 2 0 1 1-4 0a2 2 0 0 1 4 0"/>
+                        <path d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11s11-4.925 11-11S18.075 1 12 1M3 12c0 2.09.713 4.014 1.908 5.542A8.99 8.99 0 0 1 12.065 14a8.98 8.98 0 0 1 7.092 3.458A9 9 0 1 0 3 12m9 9a8.96 8.96 0 0 1-5.672-2.012A6.99 6.99 0 0 1 12.065 16a6.99 6.99 0 0 1 5.689 2.92A8.96 8.96 0 0 1 12 21"/>
+                      </g>
+                    </svg>
+                  </i>
+                  
+              </span>
+              <span class="navlink">Profile</span>
+            </a>
+          </li>
+        </ul>
+
+        <!-- Sidebar Open / Close -->
+        <div class="bottom_content">
+          <div class="user-account">
+            <!-- User Profile Section -->
+            <div class="user-profile" routerLink="/dashboard/profile">
+              <img src="https://img.icons8.com/bubbles/100/000000/user.png" alt="" *ngIf="!user?.image"/>
+              <img [src]="'/assets/' + user?.image" *ngIf="user?.image"/>
+              <div class="user-detail">
+                <h3 *ngIf="user?.role === 'SOCIETE'">{{ user?.name }}</h3>
+                <h3>{{ user?.username }}</h3>
+
+                <span>{{ user?.role }}</span>
+              </div>
+            </div>
+          </div>
+          <!-- Logout Section -->
+          <a class="bottom expand_sidebar" (click)="logout()">
+            <span>Logout</span>
+            <i class="bx bx-log-in"></i>
+          </a>
+        </div>
+        
+        <!-- <div class="bottom_content">
+          <span  class="username" routerLink="/dashboard/profile">Welcome, {{ user?.name }}</span>
+          <br>
+          <span>{{user?.role}}</span>
+          <a class="bottom expand_sidebar" (click)="logout()">
+            <span> Logout</span>
+            <i class='bx bx-log-in' ></i>
+          </a>
+        
+        </div> -->
+      </div>
+    </nav>
+
+  </body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <nav class="custom-navbar navbar navbar-expand-md navbar-dark bg-dark" aria-label="Barre de navigation Furni">
+    <div class="container">
+      <a class="navbar-brand" href="/products">Boutique<span>.</span></a>
+
+      <!-- Icône hamburger pour petits écrans -->
+      <button #navbarToggler class="navbar-toggler" type="button" (click)="toggleNavbar()" aria-expanded="false"
+        aria-label="Basculer la navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Contenu du navbar qui se replie sur petits écrans -->
+      <div #navbarCollapse class="collapse navbar-collapse" id="navbarsFurni">
+        <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
+          <li class="nav-item">
+            <a class="nav-link" href="/products">Accueil</a>
+          </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="produitsDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Produits
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="produitsDropdown">
+              <li><a class="dropdown-item" href="/products">Voir tous les produits</a></li>
+              <li><a class="dropdown-item" href="/products/create" *ngIf="isLoggedIn() && userRole === 'SOCIETE' || userRole === 'PRODUCT_MANAGER'">Créer un produit</a></li>
+            </ul>
+          </li>
+          <li><a class="nav-link" >Services</a></li>
+          <li><a class="nav-link" >Blog</a></li>
+          <li *ngIf="isLoggedIn() && userRole === 'CLIENT'"><a class="nav-link" href="/profile">Profile</a></li>
+          <li *ngIf="isLoggedIn() && userRole !== 'CLIENT'"><a class="nav-link" href="/dashboard/OvervieuwD">Dashboard</a></li>
+          <li><a class="nav-link" href="/contact">Contactez-nous</a></li>
+        </ul>
+
+        <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
+          <li *ngIf="!isLoggedIn()">
+            <a class="nav-link" href="/signin">
+              <img src="../../../assets/user.svg" alt="Icône utilisateur">
+            </a>
+          </li>
+          <li *ngIf="isLoggedIn()">
+            <a class="nav-link" href="/signin" (click)="logout()">
+              <img src="../../../assets/logout-svgrepo-com.svg" alt="Icône de déconnexion">
+            </a>
+          </li>
+          <li>
+            <a class="nav-link" (click)="toggleCartSidebar()">
+              <img src="../../../assets/cart.svg" alt="Icône panier">
+              <span class="cart-count">{{ getCartItemCount() }}</span> <!-- Cart item count -->
+            </a>
+          </li>
+
+          <li *ngIf="!isLoggedIn()">
+            <a class="nav-link" href="/signupS">
+              <i class="fa-brands fa-sellcast"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div id="shoppingCart" *ngIf="cartSidebarVisible" class="cart-sidebar">
+    <div class="offcanvas-header fs-4">
+      <h4 class="offcanvas-title fw-semibold">Panier</h4>
+      <button type="button" class="btn-close btn-close-bg-none" aria-label="Close" (click)="toggleCartSidebar()">
+      </button>
+    </div>
+
+    <div class="offcanvas-body me-xl-auto pt-0 mb-2 mb-xl-0">
+      <form class="table-responsive-md shopping-cart pb-8 pb-lg-10">
+        <table class="table table-borderless">
+          <thead>
+            <tr class="fw-500">
+              <td colspan="3" class="border-bottom pb-6">
+                <i class="fa-regular fa-circle-check"></i>
+                Votre panier est sauvegardé pour les prochaines
+                <span class="text-body-emphasis">{{ timerMinutes }}m{{ timerSeconds }}s</span>
+              </td>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Render cart items dynamically -->
+            <tr *ngFor="let item of cartItems; let i = index" class="position-relative">
+              <td class="align-middle text-center">
+                <button type="button" class="btn-close btn-close-bg-none" aria-label="Supprimer l'article"
+                  (click)="removeFromCart(i)">
+                </button>
+              </td>
+              <td class="shop-product">
+                <div class="d-flex align-items-center">
+                  <div class="me-6">
+                    <!-- Bind the first image URL -->
+                    <img [src]="item.imageUrl" width="60" height="80" [alt]="item.name" />
+                  </div>
+                  <div>
+                    <p class="card-text mb-1">
+                      <span class="fs-13px fw-500 text-decoration-line-through pe-3" *ngIf="item.originalPrice">
+                        {{ item.originalPrice | currency:'TND ' }}
+                      </span>
+                      <span class="fs-15px fw-bold text-body-emphasis">
+                        {{ item.price | currency:'TND ' }}
+                      </span>
+                    </p>
+                    <p class="fw-500 text-body-emphasis">{{ item.name }}</p>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="d-flex align-items-center mt-2">
+                  <button type="button" class="btn btn-outline-dark btn-sm me-2" (click)="updateQuantity(i, false)">
+                    -
+                  </button>
+                  <span>{{ item.quantity }}</span>
+                  <button type="button" class="btn btn-outline-dark btn-sm ms-2" (click)="updateQuantity(i, true)">
+                    +
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+    </div>
+    
+
+    <div class="offcanvas-footer flex-wrap">
+      <div class="d-flex align-items-center justify-content-between w-100 mb-5">
+        <span class="text-body-emphasis">Total price:</span>
+        <span class="cart-total fw-bold text-body-emphasis">
+          {{ getTotalPrice() | currency }}
+        </span>
+      </div>
+      <button class="btn btn-dark w-100 mb-7" (click)="openPopup()" [disabled]="cartItems.length === 0">
+        Passer commande
+      </button>
+      <button class="btn btn-outline-dark w-100" title="View shopping cart" (click)="viewCart()">
+        Voir le panier
+      </button>
+    </div>
+  </div>
+  <div class="modal" id="infoOrder" tabindex="-1" aria-labelledby="infoOrder" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="infoOrder">Informations sur la commande</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        </div>
+        <div class="modal-body">
+          <form #orderForm="ngForm" (ngSubmit)="submitOrder(orderForm.value)">
+            <!-- Nom du destinataire -->
+            <div class="mb-3">
+              <label for="recipientName" class="form-label">Nom du destinataire</label>
+              <input type="text" class="form-control" id="recipientName" name="recipientName" ngModel required />
+            </div>
+  
+            <!-- Adresse -->
+            <div class="mb-3">
+              <label for="streetAddress" class="form-label">Adresse</label>
+              <input type="text" class="form-control" id="streetAddress" name="streetAddress" ngModel required />
+            </div>
+  
+            <!-- Ville -->
+            <div class="mb-3">
+              <label for="city" class="form-label">Ville</label>
+              <input type="text" class="form-control" id="city" name="city" ngModel required />
+            </div>
+  
+            <!-- État -->
+            <div class="mb-3">
+              <label for="state" class="form-label">État</label>
+              <input type="text" class="form-control" id="state" name="state" ngModel required />
+            </div>
+  
+            <!-- Code Postal -->
+            <div class="mb-3">
+              <label for="postalCode" class="form-label">Code Postal</label>
+              <input type="text" class="form-control" id="postalCode" name="postalCode" ngModel required />
+            </div>
+  
+            <!-- Pays -->
+            <div class="mb-3">
+              <label for="country" class="form-label">Pays</label>
+              <input type="text" class="form-control" id="country" name="country" ngModel required />
+            </div>
+  
+            <!-- Numéro de téléphone -->
+            <div class="mb-3">
+              <label for="phoneNumber" class="form-label">Numéro de téléphone</label>
+              <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" ngModel required />
+            </div>
+  
+            <!-- Bouton de soumission -->
+            <button type="submit" class="btn btn-primary w-100" [disabled]="!orderForm.valid">
+              Soumettre la commande
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal" id="signInModal" tabindex="-1" aria-labelledby="signInModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header text-center border-0 pb-0">
+          <button type="button" class="btn-close position-absolute end-5 top-5" data-bs-dismiss="modal"
+            aria-label="Fermer"></button>
+          <h3 class="modal-title w-100" id="signInModalLabel">Se connecter</h3>
+        </div>
+        <div class="modal-body px-sm-13 px-8">
+          <p class="text-center fs-16 mb-10">Vous n'avez pas encore de compte ? <a data-bs-toggle="modal"
+              routerLink="/signup" data-bs-target="#signUpModal" class="text-black">Inscrivez-vous</a> gratuitement</p>
+          <form (ngSubmit)="login()">
+            <input class="form-control" placeholder="Votre email" type="email" [(ngModel)]="loginRequest.email"
+              name="email" required>
+            <input class="form-control" placeholder="Mot de passe" type="password" [(ngModel)]="loginRequest.password"
+              name="password" required>
+
+            <button type="submit" value="Se connecter"
+              class="btn btn-dark btn-hover-bg-primary btn-hover-border-primary w-100">Se connecter</button>
+          </form>
+        </div>
+        <div class="modal-footer px-13 pt-0 pb-12 border-0">
+          <div class="border-bottom w-100"></div>
+          <div class="text-center lh-1 mb-8 w-100 mt-n5">
+            <span class="fs-14 bg-body lh-1 px-4">ou connectez-vous avec</span>
+          </div>
+          <div class="d-flex w-100">
+            <a (click)="oauth2Login('google')"
+              class="btn btn-outline-secondary w-100 border-2x mt-0 btn-hover-bg-primary btn-hover-border-primary"><i
+                class="fab fa-google me-4" style="color: #DD4B39"></i>Google</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

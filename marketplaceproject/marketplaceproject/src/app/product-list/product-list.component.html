@@ -1,0 +1,83 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <app-navbar></app-navbar>
+ <app-header></app-header>
+ <section class="category_filter">
+  <div class="container">
+    <div class="category_list">
+      <button 
+        *ngFor="let type of productTypes" 
+        (click)="selectedType = type; filterProducts()" 
+        [class.active]="selectedType === type">
+        {{ type }}
+      </button>
+    </div>
+  </div>
+</section>
+  <section class="product_list section_padding">
+    
+    <div class="container">
+  
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="product_list_slider owl-carousel">
+            <div class="single_product_list_slider">
+              <div class="row align-items-center">
+                <div class="col-lg-3 col-sm-6" *ngFor="let product of filteredProducts">
+                  <!-- Move the routerLink to wrap the whole block -->
+                  <div class="single_product_item" [routerLink]="['/product', product.id]">
+                    <div *ngIf="product.imageUrls && product.imageUrls.length > 0">
+                      <img [src]="product.imageUrls[0]" alt="{{ product.name }}" class="product-image" />
+                    </div>
+                    <div class="single_product_text">
+                      <h4>{{ product.name }}</h4>
+                      <h3>{{ product.price | currency:'TND ' }}</h3>
+                      <!-- Stop the event propagation for add to cart -->
+                      <a class="add_cart" 
+                         (click)="addToCart(product, $event)">+ Ajouter au panier <i class="fa-regular fa-heart"></i></a>
+                   
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+<!-- Pagination -->
+<div class="row">
+  <div class="col-12">
+    <nav aria-label="navigation">
+      <ul class="pagination justify-content-end mt-50">
+        <li 
+          *ngFor="let page of [].constructor(totalPages); let i = index" 
+          class="page-item" 
+          [class.active]="currentPage === i + 1"
+        >
+          <!-- Change href="#" to (click) to prevent default behavior -->
+          <a class="page-link" href="javascript:void(0)" (click)="goToPage(i + 1)">
+            {{ (i + 1) | number: '2.0' }}
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+    </div>
+   
+    
+</section>
+<app-footer></app-footer>
+</body>
+</html>

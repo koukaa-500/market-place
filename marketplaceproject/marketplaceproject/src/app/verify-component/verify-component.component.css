@@ -1,0 +1,125 @@
+/* account-activation.component.css */
+
+/* General container styling */
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f9f9f9; /* Subtle background for better visuals */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Typography styles */
+h2 {
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 24px; /* Increased for better readability */
+}
+
+p {
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+/* Success message styling */
+.activation-message {
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #d4edda;
+  border-radius: 8px;
+  background-color: #d4edda;
+  color: #155724;
+}
+
+/* Error message styling */
+.activation-error {
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #f8d7da;
+  border-radius: 8px;
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Buttons styling */
+.btn {
+  display: inline-block;
+  font-size: 16px;
+  padding: 12px 30px;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease-in-out;
+  font-weight: bold;
+  margin-top: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Added shadow for depth */
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: #a71d2a;
+}
+
+.btn-lg {
+  font-size: 18px;
+  padding: 14px 35px;
+}
+
+/* Code input section styling */
+.text-center {
+  text-align: center;
+  background-color: white;
+  padding: 30px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Improved shadow effect */
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  .btn {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+
+  .btn-lg {
+    font-size: 16px;
+    padding: 12px 25px;
+  }
+
+  .text-center {
+    width: 90%;
+    padding: 20px;
+  }
+}

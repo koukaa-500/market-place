@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ product?.name || 'Produit' }}</title>
+</head>
+<body>
+  <app-navbar></app-navbar>
+  <app-header></app-header>
+  
+  <div class="product_image_area section_padding" *ngIf="product; else loading">
+    <div class="container">
+      <div class="row s_product_inner justify-content-between">
+
+        <div class="col-lg-7 col-xl-7">
+          <div class="product_slider_img">
+            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+              <div *ngIf="product.imageUrls && product.imageUrls.length > 0">
+                <div class="image-slider">
+                  <button (click)="previousImage()">&#10094;</button>
+                  <img [src]="product.imageUrls[currentImageIndex]" alt="{{ product.name }}" class="product-image" />
+                  <button (click)="nextImage()">&#10095;</button>
+                </div>
+                <div class="thumbnail-container">
+                  <img *ngFor="let image of product.imageUrls; let i = index" [src]="image" class="thumbnail"
+                       [class.active]="i === currentImageIndex" (click)="currentImageIndex = i" />
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+   
+  
+        <div class="col-lg-5 col-xl-4">
+          <div class="s_product_text">
+         
+            <div *ngIf="product.user">
+              <h4 *ngIf="product.user.societe; else showName">
+                Vendu par la société : {{ product.user.societe.name }}
+              </h4>
+              <ng-template #showName>
+                <h4>Vendu par : {{ product.user.name }}</h4>
+              </ng-template>
+            </div>
+            
+            <h3>{{ product.name }}</h3>
+            
+            <h2>{{ product.price | currency:' TND '}}</h2>
+            <ul class="list">
+                                <li >
+                      <a class="active">
+                        <p>Type de la produit : {{ product.typeP }}</p>
+                      </a>
+                    </li>
+
+              <li>
+                <a > 
+                  <span>Disponibilité</span>: 
+                  {{ product.quantity > 0 ? 'En Stock (' + product.quantity + ')' : 'Hors Stock' }}
+                </a>
+                              </li>
+            </ul>
+            <p>{{ product.description }}</p>
+            <div *ngIf="product.attributes && product.attributes.length > 0">
+           
+              <ul>
+                <li *ngFor="let attribute of product.attributes">
+                  <strong>{{ attribute.key }}:</strong> {{ attribute.value }}
+                </li>
+              </ul>
+            </div>
+            <div class="card_area d-flex justify-content-between align-items-center">
+            
+              
+              <a class="btn_3"   (click)="addToCart(product, $event)">Ajouter au panier</a>
+              <!-- <a href="#" class="like_us"> <i class="fa-regular fa-heart"></i> </a> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #loading>
+    <p>Chargement des détails du produit...</p>
+  </ng-template>
+  <app-footer></app-footer>
+  <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

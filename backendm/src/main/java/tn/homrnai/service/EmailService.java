@@ -1,0 +1,84 @@
+package tn.homrnai.service;
+
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.springframework.mail.javamail.MimeMessageHelper.MULTIPART_MODE_MIXED;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class EmailService {
+
+    private final JavaMailSender mailSender;
+    private final SpringTemplateEngine templateEngine;
+
+    @Async
+    public void sendEmail(
+            String to,
+            String username,
+            EmailTemplateName emailTemplate,
+            String confirmationUrl,
+            String activationCode,
+            String subject
+    ) throws MessagingException {
+        // Retrieve the correct template name
+        String templateName = (emailTemplate != null) ? emailTemplate.getName() : "confirm-email";
+
+        // Create the MIME email
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(
+                mimeMessage,
+                MULTIPART_MODE_MIXED,
+                UTF_8.name()
+        );
+
+        // Prepare properties for the template
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("username", username);
+        properties.put("confirmationUrl", confirmationUrl);
+        properties.put("activation_code", activationCode);
+
+        Context context = new Context();
+        context.setVariables(properties);
+
+        // Logging for debugging
+        log.info("Confirmation URL: {}", confirmationUrl);
+
+        helper.setFrom("akr3m.homrani@gmail.com");
+        helper.setTo(to);
+        helper.setSubject(subject);
+
+        try {
+            // Process the template
+            String processedTemplate = templateEngine.process(templateName, context);
+            log.info("Processed Email Content: {}", processedTemplate);
+
+            // Set the processed template as the email body
+            helper.setText(processedTemplate, true);
+
+            // Send the email
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            log.error("Failed to send email", e);
+            throw e;  // Optionally rethrow to handle in the caller method
+        }
+    }
+
+}
