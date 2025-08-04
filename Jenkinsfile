@@ -88,7 +88,7 @@ pipeline {
             steps {
                 script {
                     // Login to Docker Hub
-                    withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'koukaa', passwordVariable: 'nabil1234')]) {
+                    withCredentials([usernamePassword(usernameVariable: 'koukaa', passwordVariable: 'nabil1234')]) {
                     bat 'echo $DOCKER_PASSWORD | docker login -u koukaa -p nabil1234'
                 }
 
