@@ -92,12 +92,12 @@ pipeline {
                 
 
                     // Tag and push frontend
-                    bat "docker tag market-place-frontend ${env.FRONTEND_IMAGE}:${env.IMAGE_TAG}"
-                    bat "docker push ${env.FRONTEND_IMAGE}:${env.IMAGE_TAG}"
+                    bat "docker tag market-place-frontend %IMAGE_NAMESPACE%/market-place-frontend:%IMAGE_TAG%"
+                    bat "docker push %IMAGE_NAMESPACE%/market-place-frontend:%IMAGE_TAG%"
 
                     // Tag and push backend
-                    bat "docker tag market-place-backend ${env.BACKEND_IMAGE}:${env.IMAGE_TAG}"
-                    bat "docker push ${env.BACKEND_IMAGE}:${env.IMAGE_TAG}"
+                    bat "docker tag market-place-backend %IMAGE_NAMESPACE%/market-place-backend:%IMAGE_TAG%"
+                    bat "docker push %IMAGE_NAMESPACE%/market-place-backend:%IMAGE_TAG%"
 
                     echo '✅ Images pushed to Docker Hub!'
                 }
