@@ -87,10 +87,9 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    // Login to Docker Hub
-                    withCredentials([usernamePassword(credentialsId: 'docker',usernameVariable: 'koukaa', passwordVariable: 'nabil1234')]) {
-                    bat 'echo $DOCKER_PASSWORD | docker login -u koukaa -p nabil1234'
-                }
+                    
+                    bat 'docker login -u koukaa -p nabil1234'
+                
 
                     // Tag and push frontend
                     bat "docker tag market-place-frontend ${env.FRONTEND_IMAGE}:${env.IMAGE_TAG}"
