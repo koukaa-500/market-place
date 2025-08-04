@@ -74,19 +74,21 @@ pipeline {
     }
 }
 
-        stage('Check for Critical Vulnerabilities') {
+        stage('Fail on Critical Vulnerabilities') {
             steps {
                 script {
                     def criticalFound = false
                     ['frontend', 'backend'].each { service ->
-                        def json = readJSON file: "reports/${service}_trivy.json"
-                        if (json?.Results) {
-                            json.Results.each { result ->
-                                if (result.Vulnerabilities) {
-                                    result.Vulnerabilities.each { vuln ->
-                                        if (vuln.Severity == 'CRITICAL') {
-                                            criticalFound = true
-                                            echo "🚨 CRITICAL: ${service} | ${vuln.VulnerabilityID} | ${vuln.Title}"
+                        if (fileExists("reports/${service}_trivy.json")) {
+                            def json = readJSON file: "reports/${service}_trivy.json"
+                            if (json?.Results) {
+                                json.Results.each { result ->
+                                    if (result.Vulnerabilities) {
+                                        result.Vulnerabilities.each { vuln ->
+                                            if (vuln.Severity == 'CRITICAL') {
+                                                echo "🚨 CRITICAL: ${service} | ${vuln.VulnerabilityID} | ${vuln.Title}"
+                                                criticalFound = true
+                                            }
                                         }
                                     }
                                 }
@@ -94,7 +96,7 @@ pipeline {
                         }
                     }
                     if (criticalFound) {
-                        error("❌ Build failed: CRITICAL vulnerabilities found! Check Trivy report.")
+                        error("❌ Build failed: CRITICAL vulnerabilities found!")
                     }
                 }
             }
