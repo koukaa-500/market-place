@@ -26,15 +26,15 @@ pipeline {
 
         stage('Check Tools') {
             steps {
-                sh 'docker --version'
-                sh 'docker-compose --version'
-                sh 'trivy --version || echo "Trivy not installed"'
+                bat 'docker --version'
+                bat 'docker-compose --version'
+                bat 'trivy --version || echo "Trivy not installed"'
             }
         }
 
         stage('Build Docker Images') {
             steps {
-                sh 'docker-compose build'
+                bat 'docker-compose build'
             }
         }
 
@@ -42,10 +42,10 @@ pipeline {
             steps {
                 script {
                     // Create reports directory
-                    sh 'mkdir -p reports'
+                    bat 'mkdir -p reports'
 
                     // Start HTML report
-                    sh '''
+                    bat '''
                         echo "<h1>🔍 Trivy Security Scan Report</h1>" > reports/report.html
                         echo "<p><strong>Generated on:</strong> $(date)</p><hr>" >> reports/report.html
                     '''
@@ -58,7 +58,7 @@ pipeline {
                         def htmlSnippet = "reports/${service}_snippet.html"
 
                         // Run Trivy scan
-                        sh """
+                        bat """
                             trivy image --format json --output ${jsonReport} ${service}
                             trivy image --format table ${service} > ${htmlSnippet}
                         """
@@ -104,8 +104,8 @@ pipeline {
 
         stage('Run Application') {
             steps {
-                sh 'docker-compose down'
-                sh 'docker-compose up -d'
+                bat 'docker-compose down'
+                bat 'docker-compose up -d'
                 echo '✅ Application is running in detached mode.'
             }
         }
@@ -119,18 +119,18 @@ pipeline {
                         usernameVariable: 'DOCKERHUB_USERNAME',
                         passwordVariable: 'DOCKERHUB_PASSWORD'
                     )]) {
-                        sh """
+                        bat """
                             echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
                         """
                     }
 
                     // Tag and push frontend
-                    sh "docker tag frontend ${FRONTEND_IMAGE}:${IMAGE_TAG}"
-                    sh "docker push ${FRONTEND_IMAGE}:${IMAGE_TAG}"
+                    bat "docker tag frontend ${FRONTEND_IMAGE}:${IMAGE_TAG}"
+                    bat "docker push ${FRONTEND_IMAGE}:${IMAGE_TAG}"
 
                     // Tag and push backend
-                    sh "docker tag backend ${BACKEND_IMAGE}:${IMAGE_TAG}"
-                    sh "docker push ${BACKEND_IMAGE}:${IMAGE_TAG}"
+                    bat "docker tag backend ${BACKEND_IMAGE}:${IMAGE_TAG}"
+                    bat "docker push ${BACKEND_IMAGE}:${IMAGE_TAG}"
 
                     echo '✅ Images pushed to Docker Hub!'
                 }
