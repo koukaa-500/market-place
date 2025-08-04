@@ -106,20 +106,7 @@ pipeline {
     }
 
     post {
-    always {
-        archiveArtifacts artifacts: 'reports/**', allowEmptyArchive: true
-        script {
-            if (fileExists('reports/report.html')) {
-                publishHTML([
-                    reportDir: 'reports',
-                    reportFiles: 'report.html',
-                    keepAll: true
-                ])
-            } else {
-                echo '⚠️ report.html not generated. Skipping HTML report publish.'
-            }
-        }
-    }
+   
     success {
         echo 'Pipeline succeeded! App deployed and images pushed.'
     }
