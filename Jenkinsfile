@@ -41,6 +41,7 @@ pipeline {
         stage('Security Scan with Trivy') {
     steps {
         script {
+            bat 'rmdir /s /q reports || echo "No previous reports found"'
             bat 'mkdir reports'
 
             writeFile file: 'reports/report.html', text: """
