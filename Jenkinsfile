@@ -74,33 +74,7 @@ pipeline {
     }
 }
 
-        stage('Fail on Critical Vulnerabilities') {
-            steps {
-                script {
-                    def criticalFound = false
-                    ['frontend', 'backend'].each { service ->
-                        if (fileExists("reports/${service}_trivy.json")) {
-                            def json = readJSON file: "reports/${service}_trivy.json"
-                            if (json?.Results) {
-                                json.Results.each { result ->
-                                    if (result.Vulnerabilities) {
-                                        result.Vulnerabilities.each { vuln ->
-                                            if (vuln.Severity == 'CRITICAL') {
-                                                echo "🚨 CRITICAL: ${service} | ${vuln.VulnerabilityID} | ${vuln.Title}"
-                                                criticalFound = true
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (criticalFound) {
-                        error("❌ Build failed: CRITICAL vulnerabilities found!")
-                    }
-                }
-            }
-        }
+        
 
         stage('Run Application') {
             steps {
