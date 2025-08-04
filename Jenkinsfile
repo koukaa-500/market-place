@@ -39,42 +39,39 @@ pipeline {
         }
 
         stage('Security Scan with Trivy') {
-            steps {
-                script {
-                    // Create reports directory
-                    bat 'mkdir -p reports'
+    steps {
+        script {
+            bat 'mkdir reports'
 
-                    // Start HTML report
-                    bat '''
-                        echo "<h1>🔍 Trivy Security Scan Report</h1>" > reports/report.html
-                        echo "<p><strong>Generated on:</strong> $(date)</p><hr>" >> reports/report.html
-                    '''
+            writeFile file: 'reports/report.html', text: """
+                <h1>🔍 Trivy Security Scan Report</h1>
+                <p><strong>Generated on:</strong> ${new Date()}</p>
+                <hr>
+            """
 
-                    // Define services to scan (must match service names in docker-compose.yml)
-                    def services = ['frontend', 'backend']
+            def services = [
+                [name: 'frontend', image: 'market-place-frontend'],
+                [name: 'backend', image: 'market-place-backend']
+            ]
 
-                    services.each { service ->
-                        def jsonReport = "reports/${service}_trivy.json"
-                        def htmlSnippet = "reports/${service}_snippet.html"
+            services.each { service ->
+                def jsonReport = "reports/${service.name}_trivy.json"
+                def htmlSnippet = "reports/${service.name}_snippet.html"
 
-                        // Run Trivy scan
-                        bat """
-                            trivy image --format json --output ${jsonReport} ${service}
-                            trivy image --format table ${service} > ${htmlSnippet}
-                        """
+                bat "trivy image --format json --output ${jsonReport} ${service.image}"
+                bat "trivy image --format table ${service.image} > ${htmlSnippet}"
 
-                        // Append to HTML report
-                        def snippet = readFile("${htmlSnippet}")
-                        def htmlContent = """
-                            <h3>📦 Image: ${service}</h3>
-                            <pre>${snippet}</pre>
-                            <hr>
-                        """
-                        writeFile file: "reports/report.html", text: htmlContent, append: true
-                    }
-                }
+                def snippet = readFile("${htmlSnippet}")
+                def htmlContent = """
+                    <h3>📦 Image: ${service.image}</h3>
+                    <pre>${snippet}</pre>
+                    <hr>
+                """
+                writeFile file: 'reports/report.html', text: htmlContent, append: true
             }
         }
+    }
+}
 
         stage('Check for Critical Vulnerabilities') {
             steps {
@@ -114,15 +111,9 @@ pipeline {
             steps {
                 script {
                     // Login to Docker Hub
-                    withCredentials([usernamePassword(
-                        credentialsId: 'docker', // Your Jenkins credentials ID for Docker Hub
-                        usernameVariable: 'DOCKERHUB_USERNAME',
-                        passwordVariable: 'DOCKERHUB_PASSWORD'
-                    )]) {
-                        bat """
-                            echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
-                        """
-                    }
+                    withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'koukaa', passwordVariable: 'nabil1234')]) {
+                    bat 'echo $DOCKER_PASSWORD | docker login -u koukaa -p nabil1234'
+                }
 
                     // Tag and push frontend
                     bat "docker tag frontend ${FRONTEND_IMAGE}:${IMAGE_TAG}"
