@@ -110,28 +110,28 @@ pipeline {
             }
         }
         
-        stage('Push to Docker Hub') {
-            steps {
-                script {
-                    // Login to Docker Hub
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', 
-                                                       usernameVariable: 'DOCKER_USER', 
-                                                       passwordVariable: 'DOCKER_PASS')]) {
-                        bat "docker login -u %DOCKER_USER% -p %DOCKER_PASS%"
-                    }
+        // stage('Push to Docker Hub') {
+        //     steps {
+        //         script {
+        //             // Login to Docker Hub
+        //             withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', 
+        //                                                usernameVariable: 'DOCKER_USER', 
+        //                                                passwordVariable: 'DOCKER_PASS')]) {
+        //                 bat "docker login -u %DOCKER_USER% -p %DOCKER_PASS%"
+        //             }
                     
-                    // Tag and push frontend
-                    bat "docker tag market-place-frontend %IMAGE_NAMESPACE%/market-place-frontend:%IMAGE_TAG%"
-                    bat "docker push %IMAGE_NAMESPACE%/market-place-frontend:%IMAGE_TAG%"
+        //             // Tag and push frontend
+        //             bat "docker tag market-place-frontend %IMAGE_NAMESPACE%/market-place-frontend:%IMAGE_TAG%"
+        //             bat "docker push %IMAGE_NAMESPACE%/market-place-frontend:%IMAGE_TAG%"
                     
-                    // Tag and push backend
-                    bat "docker tag market-place-backend %IMAGE_NAMESPACE%/market-place-backend:%IMAGE_TAG%"
-                    bat "docker push %IMAGE_NAMESPACE%/market-place-backend:%IMAGE_TAG%"
+        //             // Tag and push backend
+        //             bat "docker tag market-place-backend %IMAGE_NAMESPACE%/market-place-backend:%IMAGE_TAG%"
+        //             bat "docker push %IMAGE_NAMESPACE%/market-place-backend:%IMAGE_TAG%"
                     
-                    echo '✅ Images pushed to Docker Hub!'
-                }
-            }
-        }
+        //             echo '✅ Images pushed to Docker Hub!'
+        //         }
+        //     }
+        // }
     }
     
     post {
