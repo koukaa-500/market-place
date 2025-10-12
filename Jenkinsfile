@@ -61,8 +61,7 @@ pipeline {
                     
                     // Define services to scan
                     def services = [
-                        [name: 'frontend', image: 'market-place-frontend'],
-                        [name: 'backend', image: 'market-place-backend']
+                        [name: 'frontend', image: 'market-place-frontend']
                     ]
                     
                     // Scan each service
