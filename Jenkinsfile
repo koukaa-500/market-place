@@ -10,15 +10,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm: [
-                    $class: 'GitSCM',
-                    branches: [[name: '*/master']],
-                    userRemoteConfigs: [[
-                        url: 'https://github.com/koukaa-500/market-place.git',
-                        credentialsId: '1'
-                    ]]
-                ]
-            }
+                git branch: 'master', url: 'https://github.com/koukaa-500/market-place.git'
+                }
         }
         stage('Check Tools') {
             steps {
