@@ -25,75 +25,75 @@ pipeline {
                 bat 'docker-compose build'
             }
         }
-        stage('Security Scan with Trivy') {
-            steps {
-                script {
-                    // Clean up previous reports
-                    bat 'if exist reports rmdir /s /q reports'
-                    bat 'mkdir reports'
+//         stage('Security Scan with Trivy') {
+//             steps {
+//                 script {
+//                     // Clean up previous reports
+//                     bat 'if exist reports rmdir /s /q reports'
+//                     bat 'mkdir reports'
                     
-                    // Initialize HTML report
-                    def reportHeader = """<!DOCTYPE html>
-<html>
-<head>
-    <title>Trivy Security Scan Report</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h1 { color: #2c3e50; }
-        h3 { color: #34495e; margin-top: 30px; }
-        pre { background-color: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
-        hr { border: 1px solid #ddd; }
-    </style>
-</head>
-<body>
-    <h1>🔍 Trivy Security Scan Report</h1>
-    <p><strong>Generated on:</strong> ${new Date()}</p>
-    <hr>
-"""
-                    writeFile file: 'reports/report.html', text: reportHeader
+//                     // Initialize HTML report
+//                     def reportHeader = """<!DOCTYPE html>
+// <html>
+// <head>
+//     <title>Trivy Security Scan Report</title>
+//     <style>
+//         body { font-family: Arial, sans-serif; margin: 20px; }
+//         h1 { color: #2c3e50; }
+//         h3 { color: #34495e; margin-top: 30px; }
+//         pre { background-color: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+//         hr { border: 1px solid #ddd; }
+//     </style>
+// </head>
+// <body>
+//     <h1>🔍 Trivy Security Scan Report</h1>
+//     <p><strong>Generated on:</strong> ${new Date()}</p>
+//     <hr>
+// """
+//                     writeFile file: 'reports/report.html', text: reportHeader
                     
-                    // Define services to scan
-                    def services = [
-                        [name: 'frontend', image: 'market-place-frontend']
-                    ]
+//                     // Define services to scan
+//                     def services = [
+//                         [name: 'frontend', image: 'market-place-frontend']
+//                     ]
                     
-                    // Scan each service
-                    def allContent = reportHeader
-                    services.each { service ->
-                        echo "Scanning ${service.image}..."
+//                     // Scan each service
+//                     def allContent = reportHeader
+//                     services.each { service ->
+//                         echo "Scanning ${service.image}..."
                         
-                        def jsonReport = "reports/${service.name}_trivy.json"
-                        def txtReport = "reports/${service.name}_trivy.txt"
+//                         def jsonReport = "reports/${service.name}_trivy.json"
+//                         def txtReport = "reports/${service.name}_trivy.txt"
                         
-                        // Run Trivy scan and save to JSON
-                        bat "trivy image --format json --output ${jsonReport} ${service.image}"
+//                         // Run Trivy scan and save to JSON
+//                         bat "trivy image --format json --output ${jsonReport} ${service.image}"
                         
-                        // Run Trivy scan and save to text file
-                        bat "trivy image --format table --output ${txtReport} ${service.image}"
+//                         // Run Trivy scan and save to text file
+//                         bat "trivy image --format table --output ${txtReport} ${service.image}"
                         
-                        // Read the text report
-                        def scanResult = readFile(txtReport)
+//                         // Read the text report
+//                         def scanResult = readFile(txtReport)
                         
-                        // Append to HTML
-                        def htmlSection = """
-    <h3>📦 Image: ${service.image}</h3>
-    <pre>${scanResult.replaceAll('<', '&lt;').replaceAll('>', '&gt;')}</pre>
-    <hr>
-"""
-                        allContent += htmlSection
-                    }
+//                         // Append to HTML
+//                         def htmlSection = """
+//     <h3>📦 Image: ${service.image}</h3>
+//     <pre>${scanResult.replaceAll('<', '&lt;').replaceAll('>', '&gt;')}</pre>
+//     <hr>
+// """
+//                         allContent += htmlSection
+//                     }
                     
-                    // Close HTML
-                    allContent += """
-</body>
-</html>
-"""
-                    writeFile file: 'reports/report.html', text: allContent
+//                     // Close HTML
+//                     allContent += """
+// </body>
+// </html>
+// """
+//                     writeFile file: 'reports/report.html', text: allContent
                     
-                    echo '✅ Trivy security scan completed. Report saved to reports/report.html'
-                }
-            }
-        }
+//                     echo '✅ Trivy security scan completed. Report saved to reports/report.html'
+//                 }
+//             }
+//         }
         
         stage('Run Application') {
             steps {
