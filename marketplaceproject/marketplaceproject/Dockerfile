@@ -1,5 +1,3 @@
-# frontend/Dockerfile
-
 # === Build Stage ===
 FROM node:18-alpine AS build
 WORKDIR /app

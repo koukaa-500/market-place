@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.homrnai.dto.SocieteWithEmployeesDTO;
 import tn.homrnai.model.User;
-
 import tn.homrnai.service.SocieteService;
 
 import java.util.List;
@@ -28,6 +27,18 @@ public class SocieteController {
         List<SocieteWithEmployeesDTO> societeUsers = societeService.getAllSocieteUsers();
         return ResponseEntity.ok(societeUsers);
     }
+
+    // Create a new SOCIETE user
+    @PostMapping("/create")
+    public ResponseEntity<User> createSocieteUser(@RequestBody User societeUser) {
+        try {
+            User createdUser = societeService.createSocieteUser(societeUser);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<User> updateSocieteUser(@PathVariable Long id, @RequestBody User user) {
         User updatedUser = societeService.updateSocieteUser(id, user);
@@ -39,14 +50,12 @@ public class SocieteController {
     public ResponseEntity<Object> getSocieteUserById(@PathVariable Long id) {
         User user = societeService.getSocieteUserById(id);
         if (user == null) {
-            // Return a custom JSON response for not found
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("User with ID " + id + " and role SOCIETE not found"));
         }
-        return ResponseEntity.ok(user); // Return the user if found
+        return ResponseEntity.ok(user);
     }
 
-    // Define an error response class
     static class ErrorResponse {
         private String message;
 
@@ -63,19 +72,6 @@ public class SocieteController {
         }
     }
 
-
-//    // Create a new user with role SOCIETE
-//    @PostMapping("/{societeId}/employees")
-//    public ResponseEntity<User> createSocieteEmployee(
-//            @PathVariable Long societeId, // Receive societeId as a path variable
-//            @RequestBody User employee) { // Receive the employee details in the request body
-//        User createdEmployee = societeService.createSocieteEmployee(employee, societeId);
-//        return ResponseEntity.ok(createdEmployee); // Return the created employee
-//    }
-
-
-    // Update an existing user with role SOCIETE
-
     // Delete a user with role SOCIETE
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSocieteUser(@PathVariable Long id) {
@@ -89,11 +85,10 @@ public class SocieteController {
         List<User> employees = societeService.getSocieteEmployees(societeId);
         return ResponseEntity.ok(employees);
     }
+
     @PatchMapping("/{id}/active")
     public ResponseEntity<User> updateUserActiveStatus(@PathVariable Long id, @RequestBody Boolean activeStatus) {
         User updatedUser = societeService.updateUserActiveStatus(id, activeStatus);
         return ResponseEntity.ok(updatedUser);
     }
-
 }
-
