@@ -78,4 +78,4 @@ spring:
 
 image:
   upload:
-    dir: C:/Users/koukaa/Desktop/bilel/market-place/marketplaceproject/marketplaceproject/src/assets
+    dir: ${IMAGE_UPLOAD_DIR:C:/Users/koukaa/Desktop/bilel/market-place/marketplaceproject/marketplaceproject/src/assets}

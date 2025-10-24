@@ -97,6 +97,12 @@ pipeline {
             padding: 10px;
             margin: 10px 0;
         }
+        .warning {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 10px;
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
@@ -126,7 +132,6 @@ pipeline {
                         echo "🔍 Scanning ${service.image}..."
                         
                         try {
-                            def jsonReport = "reports/${service.name}_trivy.json"
                             def txtReport = "reports/${service.name}_trivy.txt"
                             
                             // Check if image exists
@@ -137,11 +142,6 @@ pipeline {
                             
                             if (imageCheck) {
                                 echo "✅ Image ${service.image} found, starting scan..."
-                                
-                                // Run Trivy scan and save to JSON
-                                bat """
-                                    trivy image --format json --output ${jsonReport} ${service.image}:latest
-                                """
                                 
                                 // Run Trivy scan and save to text file with table format
                                 bat """
@@ -159,36 +159,12 @@ pipeline {
                                     .replaceAll('"', '&quot;')
                                     .replaceAll("'", '&#39;')
                                 
-                                // Parse JSON for summary
-                                def jsonData = readJSON file: jsonReport
-                                def criticalCount = 0
-                                def highCount = 0
-                                def mediumCount = 0
-                                def lowCount = 0
-                                
-                                jsonData.Results?.each { result ->
-                                    result.Vulnerabilities?.each { vuln ->
-                                        switch(vuln.Severity) {
-                                            case 'CRITICAL': criticalCount++; break
-                                            case 'HIGH': highCount++; break
-                                            case 'MEDIUM': mediumCount++; break
-                                            case 'LOW': lowCount++; break
-                                        }
-                                    }
-                                }
-                                
-                                // Create summary
-                                def summary = """
-        <div class="info">
-            <strong>Vulnerability Summary:</strong><br>
-            🔴 Critical: ${criticalCount} | 🟠 High: ${highCount} | 🟡 Medium: ${mediumCount} | 🟢 Low: ${lowCount}
-        </div>
-"""
-                                
                                 // Append to HTML
                                 def htmlSection = """
         <h3>📦 Image: ${service.image}:latest</h3>
-        ${summary}
+        <div class="info">
+            <strong>Scan Status:</strong> ✅ Completed successfully
+        </div>
         <pre>${scanResult}</pre>
         <hr>
 """
@@ -199,7 +175,7 @@ pipeline {
                                 echo "⚠️ Image ${service.image} not found, skipping..."
                                 def htmlSection = """
         <h3>📦 Image: ${service.image}:latest</h3>
-        <div class="info">
+        <div class="warning">
             <strong>⚠️ Warning:</strong> Image not found. Build may have failed or image name is incorrect.
         </div>
         <hr>
@@ -222,7 +198,7 @@ pipeline {
                     }
                     
                     // Add summary footer
-                    def summaryClass = scanSuccess ? 'success' : 'info'
+                    def summaryClass = scanSuccess ? 'success' : 'warning'
                     def summaryIcon = scanSuccess ? '✅' : '⚠️'
                     allContent += """
         <div class="${summaryClass}">

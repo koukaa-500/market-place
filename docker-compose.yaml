@@ -11,6 +11,8 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
 
   backend:
     build:
@@ -21,9 +23,16 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ecommerce
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: 
+      SPRING_DATASOURCE_PASSWORD: root
+      # Set image upload directory to shared volume
+      IMAGE_UPLOAD_DIR: /app/shared-assets
     ports:
       - "8080:8080"
+    volumes:
+      # Shared volume for product images
+      - product_images:/app/shared-assets
+    networks:
+      - app-network
 
   frontend:
     build:
@@ -33,6 +42,17 @@ services:
       - backend
     ports:
       - "4200:80"
+    volumes:
+      # Mount the SAME shared volume to nginx assets directory
+      - product_images:/usr/share/nginx/html/assets
+    networks:
+      - app-network
 
 volumes:
   mysql_data:
+  product_images:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge
